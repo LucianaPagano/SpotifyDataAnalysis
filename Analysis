@@ -1,0 +1,56 @@
+--An exploratory analysis of Spotify's behavior between valence and all the measures that Spotify API gives. Source: https://www.kaggle.com/datasets/zaheenhamidani/ultimate-spotify-tracks-db/
+
+-- Average of Danceability by Artist 
+SELECT artist_name, AVG(danceability) AS dance_promedy
+FROM `graphite-byte-357005.spotify.data` 
+GROUP BY artist_name
+
+-- What are the top 5 genres with the highest average valence?
+SELECT genre AND AVG(valence) AS avg_valence
+FROM `graphite-byte-357005.spotify.data` 
+GROUP BY genre
+ORDER BY avg_valence ASC
+
+-- Which artist has the highest valence on average?
+SELECT artist_name, AVG(valence) AS avg_valence
+FROM `graphite-byte-357005.spotify.data` 
+GROUP BY artist_name
+ORDER BY avg_valence ASC
+
+--What is the distribution of danceability scores for tracks in each genre?
+SELECT genre, PERCENTILE_CONT(0.5), ORDER BY danceability AS median_danceability
+FROM `graphite-byte-357005.spotify.data` 
+GROUP BY genre;
+
+----Is there a correlation between loudness and energy of tracks?
+SELECT CORR(loudness, energy) AS Correlation
+FROM `graphite-byte-357005.spotify.data` 
+LIMIT 1000
+
+-- Which time signature has the highest average energy?
+SELECT time_signature, AVG(energy) as avg_energy
+FROM `graphite-byte-357005.spotify.data` 
+GROUP BY time_signature
+ORDER BY avg_energy
+
+-- What is the average duration of tracks in each genre?
+SELECT AVG(duration_ms) AS avg_duration, genre
+FROM `graphite-byte-357005.spotify.data` 
+GROUP BY genre
+ORDER BY avg_duration
+
+-- Which genres have the highest and lowest variance in popularity?
+  --LOWEST
+  SELECT genre, VARIANCE(popularity) AS var_desc
+  FROM `graphite-byte-357005.spotify.data` 
+  GROUP BY genre
+  ORDER BY var_desc DESC
+  
+  -- HIGHEST
+  SELECT genre, VARIANCE(popularity) AS var_desc
+  FROM `graphite-byte-357005.spotify.data` 
+  GROUP BY genre
+  ORDER BY var_desc ASC
+
+--
+
